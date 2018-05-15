@@ -2,6 +2,20 @@
 Through games and story telling, collect users' speech as they play on a mobile app. Here I will brainstorm and play around with what kind of apps I can create to collect more speech data.
 
 
+### Current "game" in development
+* imitation app: earn points by mimicking another sound as closely as possible
+* learn how to:
+* collect, analyze, and maybe even manipulate speech with Python 
+* rate performance across different types of speakers while measuring for bias 
+* deal with speech data for something fun
+* develop a game... and maybe even do some simple 3D animations with Blender.. we'll see..
+
+#### Dependencies
+* cffi  (cffi-1.11.5 pycparser-2.18)
+* sounddevice (sounddevice-0.3.11)
+* Numpy
+
+
 ### Ideas:
 * What your speech sounds like as the opposite gender, as an adult/child
 * Who can tell a better story from something like "Rory's game cubes"? 
