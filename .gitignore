@@ -1,3 +1,4 @@
 .directory 
 env/
 voice_master.cpython-35.pyc
+*.wav
