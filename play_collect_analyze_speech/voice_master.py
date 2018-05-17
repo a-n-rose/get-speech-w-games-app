@@ -10,23 +10,40 @@ Created on Mon May 14 16:13:28 2018
 import sounddevice as sd
 
 class Mimic_Game:
-    def __init__(self,user_name):
+    def __init__(self):
         print(
                 '''
-                Welcome to the WHAT YOUR VOICE CAN SOUND LIKE game
+                Welcome to the game: I CAN MIMIC THAT!
                 
-                We will present to you sounds to mimic. 
+                We will present to you sounds and you must try to sound as much like them as you can. 
                 
-                The more you can make your voice sound like what we play
-                the more points you collect.
+                The better you are, the more points you collect.
                 
                 If you earn 100 points, you will be titled
-                {}, THE VOICE MASTER
-                
-                '''.format(user_name.upper())
+                MIMIC MASTER
+                                
+                '''
                 )
-        self.user_name = user_name
+        self.user_name = None
         
+    def enter_username(self):
+        username = input("Please enter your username: ")
+        if username:
+            return username
+        else:
+            self.enter_username()
+    
+    def start_game(self):
+        user_ready = input("Press ENTER to start or type 'exit' to leave: ")
+        if user_ready == '':
+            print("Great!")
+            username = self.enter_username()
+            return username
+        elif 'exit' in user_ready.lower():
+            return None
+        else:
+            self.start_game()
+    
     def record_user(self,duration):
         duration = duration
         fs = 44100
@@ -53,7 +70,7 @@ class Mimic_Game:
         Perhaps read a sentence aloud?
         '''
 
-        user_rec = self.record_user(5)
+        user_rec = self.record_user(2)
 
         if self.check_rec(user_rec):
         
