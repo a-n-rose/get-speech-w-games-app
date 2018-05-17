@@ -14,12 +14,6 @@ import os
 import pyglet
 
 
-
-
-
-
-
-
 class Mimic_Game:
     def __init__(self):
         print(
@@ -121,7 +115,6 @@ class Mimic_Game:
             print("\n** Please enter either 'y' or 'n' **".upper())
             self.test_mic(sec)
             
-            
     def rand_sound2mimic(self):
         os.chdir('./soundfiles/')
         try:
@@ -138,7 +131,3 @@ class Mimic_Game:
         finally:
             os.chdir('..')
         return None
-    
-    
-            
-    
