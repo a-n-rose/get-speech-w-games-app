@@ -8,6 +8,17 @@ Created on Mon May 14 16:13:28 2018
 """
 
 import sounddevice as sd
+import random
+import glob
+import os
+import pyglet
+
+
+
+
+
+
+
 
 class Mimic_Game:
     def __init__(self):
@@ -25,6 +36,7 @@ class Mimic_Game:
                 '''
                 )
         self.user_name = None
+        self.player = pyglet.media.Player()
         
     def enter_username(self):
         username = input("Please enter your username: ")
@@ -33,16 +45,19 @@ class Mimic_Game:
         else:
             self.enter_username()
     
-    def start_game(self):
-        user_ready = input("Press ENTER to start or type 'exit' to leave: ")
+    def start_game(self,action,username = None):
+        user_ready = input("Press ENTER to {} or type 'exit' to leave: ".format(action))
         if user_ready == '':
-            print("Great!")
-            username = self.enter_username()
-            return username
+            if username:
+                print("Great!")
+                username = self.enter_username()
+                return username
+            else:
+                return True
         elif 'exit' in user_ready.lower():
-            return None
+            return False
         else:
-            self.start_game()
+            self.start_game('start')
     
     def record_user(self,duration):
         duration = duration
@@ -105,3 +120,25 @@ class Mimic_Game:
             print("\n \n \n \n")
             print("\n** Please enter either 'y' or 'n' **".upper())
             self.test_mic(sec)
+            
+            
+    def rand_sound2mimic(self):
+        os.chdir('./soundfiles/')
+        try:
+            sounds = [wave for wave in glob.glob('*.wav')]
+            rand_ind = random.randint(0,len(sounds))
+            filename = sounds[rand_ind]
+            rand_sound = pyglet.media.load(filename)
+            self.player.queue(rand_sound)
+            self.player.play()
+            pyglet.app.run()
+            pyglet.app.exit()
+        except ValueError:
+            print("Value Error!")
+        finally:
+            os.chdir('..')
+        return None
+    
+    
+            
+    
