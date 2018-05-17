@@ -14,19 +14,7 @@ if __name__ == '__main__':
     new_game = Mimic_Game()
     username = new_game.start_game()
     if username:
-        test_start = input("Ready to test your mic? (press y or n): ")
-        test = False
-        while test == False:
-            if 'n' in test_start:
-                print("Why did you start the game then? Give it a try!")
-            if 'y' in test_start:
-                test = True
-        print("Recoring...")
-        user_rec = new_game.test_record()
-        print("Stopped recording and.....")
-        if user_rec.any():
-            print("It worked!")
-            print("And here's how you sounded:")
-            new_game.play_rec(user_rec)
-        else:
-            print("Oh darnit... Something's wrong...")
+        sec = 2
+        mictest = new_game.test_mic(sec)
+        if mictest == False:
+            print("We couldn't test your voice..")

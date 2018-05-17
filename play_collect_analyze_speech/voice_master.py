@@ -86,4 +86,22 @@ class Mimic_Game:
                     )
         
         return None
-        
+    
+    def test_mic(self,sec):
+        ready2test = input("Ready to test your mic?\n \nIf yes, we will record for {} seconds and play the recording immediately afterwards.\n \nType 'yes' or 'no': ".format(str(sec)))
+        if 'n' in ready2test:
+            return False
+        elif 'y' in ready2test:
+            user_rec = self.test_record()
+            if user_rec.any():
+                print("\nFinished recording.\n \nHere's what you sounded like:")
+                self.play_rec(user_rec)
+                return True
+            else:
+                print("Hmmmmm.. something went wrong. Check your mic and try again.")
+                self.test_mic(sec)
+                
+        else:
+            print("\n \n \n \n")
+            print("\n** Please enter either 'y' or 'n' **".upper())
+            self.test_mic(sec)
