@@ -30,6 +30,7 @@ class Mimic_Game:
                 '''
                 )
         self.user_name = None
+        self.cont_game = True
         
         
     def enter_username(self):
@@ -130,3 +131,10 @@ class Mimic_Game:
         finally:
             os.chdir('..')
         return None
+    
+    def close_game(self):
+        '''
+        close and save anything that was open during the game
+        '''
+        pygame.quit()
+        
