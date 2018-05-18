@@ -11,7 +11,7 @@ import sounddevice as sd
 import random
 import glob
 import os
-import pyglet
+import pygame
 
 
 
@@ -36,7 +36,7 @@ class Mimic_Game:
                 '''
                 )
         self.user_name = None
-        self.player = pyglet.media.Player()
+        
         
     def enter_username(self):
         username = input("Please enter your username: ")
@@ -50,8 +50,8 @@ class Mimic_Game:
         if user_ready == '':
             if username:
                 print("Great!")
-                username = self.enter_username()
-                return username
+                self.user_name = self.enter_username()
+                return self.user_name
             else:
                 return True
         elif 'exit' in user_ready.lower():
@@ -126,13 +126,12 @@ class Mimic_Game:
         os.chdir('./soundfiles/')
         try:
             sounds = [wave for wave in glob.glob('*.wav')]
-            rand_ind = random.randint(0,len(sounds))
+            rand_ind = random.randint(0,len(sounds)-1)
             filename = sounds[rand_ind]
-            rand_sound = pyglet.media.load(filename)
-            self.player.queue(rand_sound)
-            self.player.play()
-            pyglet.app.run()
-            pyglet.app.exit()
+            pygame.init()
+            rand_sound = pygame.mixer.Sound(filename)
+            rand_sound.play()
+            print("Can you mimic that?")
         except ValueError:
             print("Value Error!")
         finally:

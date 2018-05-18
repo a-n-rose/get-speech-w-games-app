@@ -21,3 +21,4 @@ if __name__ == '__main__':
         listen = new_game.start_game('listen to a sound')
         if listen:
             new_game.rand_sound2mimic()
+         
