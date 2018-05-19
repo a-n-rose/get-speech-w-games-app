@@ -22,7 +22,7 @@ print(fingerprint)
 #plotting the fingerprint
 import numpy as np
 import matplotlib.pyplot as plt
-fig = plt.figure()
+plt.figure()
 bitmap = np.transpose(np.array([[b=='1' for b in list('{:32b}'.format(i & 0xffffffff))]for i in fingerprint]))
 plt.imshow(bitmap)
 
