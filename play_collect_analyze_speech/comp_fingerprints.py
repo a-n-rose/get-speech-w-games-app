@@ -12,13 +12,13 @@ import sounddevice as sd
 import soundfile as sf
 import pygame
 from fuzzywuzzy import fuzz
+import datetime
 
 class Comp_FP:
-    def __init__(self,file1 = None, file2 = None):
+    def __init__(self, file1, file2):
+        self.date = datetime.datetime.now()
         self.file1 = file1
         self.file2 = file2
-        self.fp1 = None
-        self.fp2 = None
     
     def get_fp(self,filename):
         duration, fp_encoded = acoustid.fingerprint_file(filename)
