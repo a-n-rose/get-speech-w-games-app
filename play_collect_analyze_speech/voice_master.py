@@ -29,7 +29,7 @@ class Mimic_Game:
                                 
                 '''
                 )
-        self.user_name = None
+        self.username = None
         self.cont_game = True
         
         
@@ -45,8 +45,8 @@ class Mimic_Game:
         if user_ready == '':
             if username:
                 print("Great!")
-                self.user_name = self.enter_username()
-                return self.user_name
+                self.username = self.enter_username()
+                return self.username
             else:
                 return True
         elif 'exit' in user_ready.lower():
@@ -57,7 +57,8 @@ class Mimic_Game:
     def record_user(self,duration):
         duration = duration
         fs = 44100
-        user_rec = sd.rec(int(duration*fs),samplerate=fs,channels=2,blocking=True)
+        user_rec = sd.rec(int(duration*fs),samplerate=fs,channels=2)
+        sd.wait()   
         return(user_rec)
     
     def check_rec(self,user_rec):
@@ -72,6 +73,7 @@ class Mimic_Game:
     def play_rec(self,recording):
         fs = 44100
         sd.play(recording, fs)
+        sd.wait()
         return None
     
     def test_record(self):
@@ -98,24 +100,20 @@ class Mimic_Game:
         return None
     
     def test_mic(self,sec):
-        ready2test = input("Ready to test your mic?\n \nIf yes, we will record for {} seconds and play the recording immediately afterwards.\n \nType 'yes' or 'no': ".format(str(sec)))
-        if 'n' in ready2test:
-            return False
-        elif 'y' in ready2test:
-            user_rec = self.test_record()
-            if user_rec.any():
-                print("\nFinished recording.\n \nHere's what you sounded like:")
-                self.play_rec(user_rec)
-                return True
+        user_rec = self.test_record()
+        sd.wait()
+        if user_rec.any():
+            sd.wait()
+            print("This is what you sounded like!")
+            self.play_rec(user_rec)
+            sd.wait()
+        else:    
+            print("Hmmmmm.. something went wrong. Check your mic and try again.")
+            if self.start_game('test your mic'):
+                self.test_mic(5)
             else:
-                print("Hmmmmm.. something went wrong. Check your mic and try again.")
-                self.test_mic(sec)
-                
-        else:
-            print("\n \n \n \n")
-            print("\n** Please enter either 'y' or 'n' **".upper())
-            self.test_mic(sec)
-            
+                return False
+     
     def rand_sound2mimic(self):
         os.chdir('./soundfiles/')
         try:

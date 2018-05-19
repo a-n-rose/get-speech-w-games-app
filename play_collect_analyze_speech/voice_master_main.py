@@ -15,6 +15,9 @@ if __name__ == '__main__':
     username = currgame.start_game('start', username = True)
     if username:
         sec = 2
+        test_mic = currgame.start_game('test your mic')
+        if test_mic:
+            print("Now recording")
         mictest = currgame.test_mic(sec)
         if mictest == False:
             print("We couldn't test your voice..")
