@@ -125,6 +125,8 @@ class Mimic_Game:
             pygame.init()
             rand_sound = pygame.mixer.Sound(filename)
             rand_sound.play()
+            while pygame.mixer.get_busy():
+                pass
             print("Can you mimic that?")
         except ValueError:
             print("Value Error!")
