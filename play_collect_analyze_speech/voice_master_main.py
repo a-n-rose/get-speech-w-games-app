@@ -28,7 +28,7 @@ if __name__ == '__main__':
                 currgame.rand_sound2mimic()
                 rep_mim = currgame.record_user(5)
                 currgame.play_rec(rep_mim)
-                print("Not bad!")
+                print("\nNot bad, {}!\n".format(currgame.username))
             else:
                 print("Thanks for playing!")
                 currgame.close_game()
