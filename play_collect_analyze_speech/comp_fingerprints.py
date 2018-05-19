@@ -13,6 +13,8 @@ import soundfile as sf
 import pygame
 from fuzzywuzzy import fuzz
 import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Comp_FP:
     def __init__(self, file1, file2):
@@ -58,6 +60,12 @@ class Comp_FP:
     def comp_fp(self,fingerprint1,fingerprint2):
         similarity = fuzz.ratio(fingerprint1,fingerprint2)
         return(similarity)
+    
+    def vis_fp(self,fingerprint):
+        plt.figure()
+        bitmap = np.transpose(np.array([[b=='1' for b in list('{:32b}'.format(i & 0xffffffff))]for i in fingerprint]))
+        plt.imshow(bitmap)    
+        return(None)
     
     def close_prog(self):
         '''
