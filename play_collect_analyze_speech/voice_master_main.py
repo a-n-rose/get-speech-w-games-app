@@ -21,7 +21,9 @@ if __name__ == '__main__':
         while currgame.cont_game == True:
             currgame.cont_game = currgame.start_game('listen to a sound')
             if currgame.cont_game:
+                print("Right after this plays, we will record your attempt at the sound. Get ready!")
                 currgame.rand_sound2mimic()
+                rep_mim = currgame.record_user(5)
             else:
                 print("Thanks for playing!")
                 currgame.close_game()
