@@ -43,7 +43,7 @@ if __name__ == '__main__':
                 fingpr_mim = currgame.get_fingpr(mim_filename)
                 fingpr_usr = currgame.get_fingpr(usr_recfilename)
                 score = currgame.comp_fingpr(fingpr_mim,fingpr_usr)
-                print(score)
+                print('\nAnd your score is:\n',score)
             else:
                 print("Thanks for playing!")
                 currgame.close_game()
