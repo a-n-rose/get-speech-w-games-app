@@ -8,11 +8,17 @@ Created on Mon May 14 16:13:28 2018
 """
 
 import sounddevice as sd
+import soundfile as sf
 import random
 import glob
 import os
 import pygame
 import librosa
+import acoustid
+import chromaprint
+from fuzzywuzzy import fuzz
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Mimic_Game:
@@ -133,11 +139,37 @@ class Mimic_Game:
             os.chdir('..')
         return None
         
-    
     def get_duration(self,wavefile):
         y, fs = librosa.load(wavefile)
         duration = len(y)/fs
         return(duration)
+    
+    def get_fingpr(self,filename):
+        duration, fp_encoded = acoustid.fingerprint_file(filename)
+        fingerprint, version = chromaprint.decode_fingerprint(fp_encoded)
+        return(fingerprint)
+
+    def save_rec(self,filename,rec,fs):
+        sf.write(filename,rec,fs)
+        return None
+    
+    def play_wav(self,filename):
+        pygame.init()
+        sound = pygame.mixer.Sound(filename)
+        sound.play()
+        while pygame.mixer.get_busy():
+            pass
+        return None
+    
+    def comp_fingpr(self,fingerprint1,fingerprint2):
+        similarity = fuzz.ratio(fingerprint1,fingerprint2)
+        return(similarity)
+    
+    def vis_fingpr(self,fingerprint):
+        plt.figure()
+        bitmap = np.transpose(np.array([[b=='1' for b in list('{:32b}'.format(i & 0xffffffff))]for i in fingerprint]))
+        plt.imshow(bitmap)    
+        return(None)
     
     def close_game(self):
         '''
