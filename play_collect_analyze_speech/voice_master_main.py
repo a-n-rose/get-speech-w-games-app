@@ -15,6 +15,7 @@ if __name__ == '__main__':
     
     currgame = Mimic_Game()
     username = currgame.start_game('start', username = True)
+    max_points = 1000
     directory_mim = './soundfiles/'
     directory_user = './user_recordings/'
     if not os.path.exists(directory_user):
@@ -28,7 +29,7 @@ if __name__ == '__main__':
         if mictest == False:
             print("We couldn't test your voice..")
         while currgame.cont_game == True:
-            while currgame.points < 1000:
+            while currgame.points < max_points:
                 currgame.cont_game = currgame.start_game('listen to a sound')
                 if currgame.cont_game:
                     print("Right after this plays, we will record your attempt at the sound. Get ready!")
@@ -49,8 +50,10 @@ if __name__ == '__main__':
                     print('\nTotal points collected so far: ',score)
                 else:
                     print("Thanks for playing!")
+                    currgame.points = max_points
                     currgame.close_game()
-            print("\nCongratulations!!! You're a MIMIC MASTER!!")
+            if currgame.cont_game:
+                print("\nCongratulations!!! You're a MIMIC MASTER!!")
             currgame.cont_game = False
             currgame.close_game()
             
