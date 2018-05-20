@@ -20,7 +20,7 @@ if __name__ == '__main__':
     if not os.path.exists(directory_user):
         os.makedirs(directory_user)
     if username:
-        sec = 2
+        sec = 5
         test_mic = currgame.start_game('test your mic')
         if test_mic:
             print("Now recording")
@@ -39,7 +39,7 @@ if __name__ == '__main__':
                     
                     #save the recording
                     time = datetime.datetime.now()
-                    time_str = "{}".format(str(time.year)+'_'+str(time.day)+'_'+str(time.hour)+'_'+str(time.minute)+'__'+str(time.second))
+                    time_str = currgame.get_date()
                     usr_recfilename = directory_user+username+'_'+time_str+'.wav'
                     currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
                     

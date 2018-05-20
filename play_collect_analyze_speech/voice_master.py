@@ -19,6 +19,7 @@ import chromaprint
 from fuzzywuzzy import fuzz
 import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 
 
 class Mimic_Game:
@@ -46,6 +47,11 @@ class Mimic_Game:
             return username
         else:
             self.enter_username()
+    
+    def get_date(self):
+        time = datetime.datetime.now()
+        time_str = "{}".format(str(time.year)+'_'+str(time.day)+'_'+str(time.hour)+'_'+str(time.minute)+'__'+str(time.second))
+        return(time_str)
     
     def start_game(self,action,username = None):
         user_ready = input("Press ENTER to {} or type 'exit' to leave: ".format(action))
@@ -83,16 +89,17 @@ class Mimic_Game:
         sd.wait()
         return None
     
-    def test_record(self):
+    def test_record(self,sec):
         '''
         The user will need to do a test record to analyze natural voice.
         Perhaps read a sentence aloud?
         '''
 
-        user_rec = self.record_user(2)
+        user_rec = self.record_user(sec)
 
         if self.check_rec(user_rec):
-        
+            filename = './user_recordings/testrec_{}.wav'.format(self.username+'_'+self.get_date())
+            self.save_rec(filename,user_rec,fs=44100)
             return user_rec
         else:
             print(
@@ -107,7 +114,7 @@ class Mimic_Game:
         return None
     
     def test_mic(self,sec):
-        user_rec = self.test_record()
+        user_rec = self.test_record(sec)
         sd.wait()
         if user_rec.any():
             sd.wait()
