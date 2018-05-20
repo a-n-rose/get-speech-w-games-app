@@ -1,8 +1,11 @@
 ## Mimic Game
 
 voice_master_main.py
+
 voice_master.py
+
 (need thinkdsp.py and thinkplot.py in same directory)
+
 
 This is a simple game where the user is presented sounds to mimic (i.e. animals) and earns points based on how well they mimic the sound.
 * I collected some bird sounds from here: http://soundbible.com/tags-bird.html
