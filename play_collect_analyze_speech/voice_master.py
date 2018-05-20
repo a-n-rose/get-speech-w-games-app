@@ -199,18 +199,6 @@ class Mimic_Game:
         wave_filtered.normalize()
         wave_filtered.write(wavefile)
         return None
-    
-    def speech_start(self,wavefile):
-        y, sr = librosa.load(wavefile)
-        y_diff = [abs(y[i]-y[i-1]) for i in range(len(y)) if i > 0]
-        for amp_diff in y_diff:
-            if amp_diff > 0.1 and y_diff.index(amp_diff)>10:
-                new_start = y_diff.index(amp_diff)
-                print(new_start)
-                break
-        y_new = y[new_start::]
-        sf.write(wavefile,y_new,sr)
-        return None
         
     def close_game(self):
         '''

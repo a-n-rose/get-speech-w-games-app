@@ -20,7 +20,10 @@ if __name__ == '__main__':
         os.makedirs(directory_user)
     if username:
         sec = 5
-        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} second.\n\n".format(sec))
+#        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} seconds.\n\n".format(sec))
+        
+        #have to figure out how to use the silence to cancel out background noise
+        print("\nThis next step will take just {} seconds\n".format(sec))
         test_mic = currgame.start_game('test your mic')
         if test_mic:
             print("Now recording. Please stay quiet as we measure the background noise.")
@@ -45,9 +48,6 @@ if __name__ == '__main__':
                     #currgame.match_amp(usr_recfilename,max_amp)
                     currgame.normalize_and_filter(usr_recfilename)
                     
-                    currgame.play_wav(usr_recfilename)
-                    
-                    currgame.speech_start(usr_recfilename)
                     currgame.play_wav(usr_recfilename)
                     
                     print("\nNot bad, {}!\n".format(currgame.username))
