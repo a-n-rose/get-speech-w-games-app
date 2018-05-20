@@ -21,12 +21,13 @@ if __name__ == '__main__':
         os.makedirs(directory_user)
     if username:
         sec = 5
+        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} second.\n\n".format(sec))
         test_mic = currgame.start_game('test your mic')
         if test_mic:
-            print("Now recording")
+            print("Now recording. Please stay quiet as we measure the background noise.")
         mictest = currgame.test_mic(sec)
         if mictest == False:
-            print("We couldn't test your voice..")
+            print("We couldn't test your mic..")
         while currgame.cont_game == True:
             while currgame.points < max_points:
                 currgame.cont_game = currgame.start_game('listen to a sound')
@@ -43,7 +44,8 @@ if __name__ == '__main__':
                     usr_recfilename = directory_user+username+'_'+time_str+'.wav'
                     currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
                     
-                    currgame.match_amp(usr_recfilename,max_amp)
+                    #currgame.match_amp(usr_recfilename,max_amp)
+                    currgame.apply_filters(usr_recfilename)
                     
                     currgame.play_wav(usr_recfilename)
                     print("\nNot bad, {}!\n".format(currgame.username))

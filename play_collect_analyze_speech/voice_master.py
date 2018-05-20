@@ -6,6 +6,7 @@ Created on Mon May 14 16:13:28 2018
 
 @author: airos
 """
+import thinkdsp
 
 import sounddevice as sd
 import soundfile as sf
@@ -76,8 +77,7 @@ class Mimic_Game:
     
     def check_rec(self,user_rec):
         '''
-        Need to check the speech to make sure the recording was 
-        successful and not too much background noise is there.
+        Need to see if recording worked and meausre the amount of background noise
         '''
         if user_rec.any():
             return True
@@ -118,7 +118,7 @@ class Mimic_Game:
         sd.wait()
         if user_rec.any():
             sd.wait()
-            print("This is what you sounded like!")
+            print("Thanks!")
             self.play_rec(user_rec)
             sd.wait()
         else:    
@@ -188,6 +188,15 @@ class Mimic_Game:
         bitmap = np.transpose(np.array([[b=='1' for b in list('{:32b}'.format(i & 0xffffffff))]for i in fingerprint]))
         plt.imshow(bitmap)    
         return(None)
+        
+    def apply_filters(self,wavefile):
+        wave = thinkdsp.read_wave(wavefile)
+        wave_sp = wave.make_spectrum()
+        wave_sp.low_pass(cutoff=3000,factor=0.01)
+        wave_sp.high_pass(cutoff=200,factor=0.91)
+        wave_filtered = wave_sp.make_wave()
+        wave_filtered.write(wavefile)
+        return None
     
     def close_game(self):
         '''
