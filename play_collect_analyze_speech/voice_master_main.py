@@ -25,8 +25,9 @@ if __name__ == '__main__':
             currgame.cont_game = currgame.start_game('listen to a sound')
             if currgame.cont_game:
                 print("Right after this plays, we will record your attempt at the sound. Get ready!")
-                currgame.rand_sound2mimic()
-                rep_mim = currgame.record_user(5)
+                mim_filename = currgame.rand_sound2mimic()
+                duration = currgame.get_duration('./soundfiles/'+mim_filename)
+                rep_mim = currgame.record_user(duration)
                 currgame.play_rec(rep_mim)
                 print("\nNot bad, {}!\n".format(currgame.username))
             else:

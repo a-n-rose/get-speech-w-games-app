@@ -12,6 +12,7 @@ import random
 import glob
 import os
 import pygame
+import librosa
 
 
 class Mimic_Game:
@@ -125,12 +126,18 @@ class Mimic_Game:
             rand_sound.play()
             while pygame.mixer.get_busy():
                 pass
-            print("Start mimicking!")
+            return(filename)
         except ValueError:
             print("Value Error!")
         finally:
             os.chdir('..')
         return None
+        
+    
+    def get_duration(self,wavefile):
+        y, fs = librosa.load(wavefile)
+        duration = len(y)/fs
+        return(duration)
     
     def close_game(self):
         '''
