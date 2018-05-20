@@ -8,7 +8,7 @@ Created on Tue May 15 22:22:15 2018
 
 from voice_master import Mimic_Game
 import os
-import shutil
+#import shutil
     
 
 if __name__ == '__main__':
