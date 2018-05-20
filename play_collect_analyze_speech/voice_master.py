@@ -31,14 +31,14 @@ class Mimic_Game:
                 
                 The better you are, the more points you collect.
                 
-                If you earn 100 points, you will be titled
+                If you earn 1000 points, you will be titled
                 MIMIC MASTER
                                 
                 '''
                 )
         self.username = None
         self.cont_game = True
-        
+        self.points = 0
         
     def enter_username(self):
         username = input("Please enter your username: ")
