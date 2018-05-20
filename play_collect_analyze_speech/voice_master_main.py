@@ -7,12 +7,18 @@ Created on Tue May 15 22:22:15 2018
 """
 
 from voice_master import Mimic_Game
+import datetime
+import os
     
 
 if __name__ == '__main__':
     
     currgame = Mimic_Game()
     username = currgame.start_game('start', username = True)
+    directory_mim = './soundfiles/'
+    directory_user = './user_recordings/'
+    if not os.path.exists(directory_user):
+        os.makedirs(directory_user)
     if username:
         sec = 2
         test_mic = currgame.start_game('test your mic')
@@ -25,15 +31,19 @@ if __name__ == '__main__':
             currgame.cont_game = currgame.start_game('listen to a sound')
             if currgame.cont_game:
                 print("Right after this plays, we will record your attempt at the sound. Get ready!")
-                mim_filename = currgame.rand_sound2mimic()
-                duration = currgame.get_duration('./soundfiles/'+mim_filename)
+                mim_filename = directory_mim+currgame.rand_sound2mimic()
+                duration = currgame.get_duration(mim_filename)
                 rep_mim = currgame.record_user(duration)
                 currgame.play_rec(rep_mim)
                 print("\nNot bad, {}!\n".format(currgame.username))
+                time = datetime.datetime.now()
+                time_str = "{}".format(str(time.year)+'_'+str(time.day)+'_'+str(time.hour)+'_'+str(time.minute)+'__'+str(time.second))
+                usr_recfilename = directory_user+username+'_'+time_str+'.wav'
+                currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
+                fingpr_mim = currgame.get_fingpr(mim_filename)
+                fingpr_usr = currgame.get_fingpr(usr_recfilename)
+                score = currgame.comp_fingpr(fingpr_mim,fingpr_usr)
+                print(score)
             else:
                 print("Thanks for playing!")
                 currgame.close_game()
-            
-        
-        
-         
