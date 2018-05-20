@@ -7,7 +7,6 @@ Created on Tue May 15 22:22:15 2018
 """
 
 from voice_master import Mimic_Game
-import datetime
 import os
     
 
@@ -39,7 +38,6 @@ if __name__ == '__main__':
                     rep_mim = currgame.record_user(duration)
                     
                     #save the recording
-                    time = datetime.datetime.now()
                     time_str = currgame.get_date()
                     usr_recfilename = directory_user+username+'_'+time_str+'.wav'
                     currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
