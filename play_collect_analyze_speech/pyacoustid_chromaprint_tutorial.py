@@ -3,7 +3,7 @@
 """
 Created on Sat May 19 12:38:10 2018
 
-@author: airos
+I pulled basic examples from on-line somewhere... but I implemented them here comparing a file (on local device) with a "live" recording
 """
 
 import acoustid
@@ -27,11 +27,6 @@ bitmap = np.transpose(np.array([[b=='1' for b in list('{:32b}'.format(i & 0xffff
 plt.imshow(bitmap)
 
 pygame.quit()
-
-
-
-
-
 
 
 #check similarity with another file
@@ -66,7 +61,6 @@ play_rec(rec)
 save_rec('usr_mimic.wav',rec,fs=44100)
 
 
-
 #create fingerprints for mimicked sound and mimic:
 duration1, fp_encoded1 = acoustid.fingerprint_file('dove-Mike_Koenig-1208819046.wav')
 fingerprint1, version1 = chromaprint.decode_fingerprint(fp_encoded1)
@@ -76,11 +70,8 @@ duration_mim, fp_encoded_mim = acoustid.fingerprint_file('usr_mimic.wav')
 fingerprint_mim, version_mim = chromaprint.decode_fingerprint(fp_encoded_mim)
 print(fingerprint_mim)
 
-
 #compare the sounds!
 similarity_mim = fuzz.ratio(fingerprint_mim,fingerprint1)
-
-
 
 #anc compare with totally non-mimicked wave file:
 rec = record_user(5)
