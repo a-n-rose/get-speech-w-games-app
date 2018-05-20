@@ -144,6 +144,16 @@ class Mimic_Game:
         y, fs = librosa.load(wavefile)
         duration = len(y)/fs
         return(duration)
+        
+    def get_max_amp(self,wavefile):
+        y, fs = librosa.load(wavefile)
+        return(max(y))
+        
+    def match_amp(self,wavefile,max_amp):
+        y, fs = librosa.load(wavefile)
+        new_amplitude = y*(max_amp/max(y))
+        self.save_rec(wavefile,new_amplitude,fs)
+        return None
     
     def get_fingpr(self,filename):
         duration, fp_encoded = acoustid.fingerprint_file(filename)

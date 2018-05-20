@@ -12,7 +12,6 @@ import os
     
 
 if __name__ == '__main__':
-    
     currgame = Mimic_Game()
     username = currgame.start_game('start', username = True)
     max_points = 1000
@@ -35,19 +34,26 @@ if __name__ == '__main__':
                     print("Right after this plays, we will record your attempt at the sound. Get ready!")
                     mim_filename = directory_mim+currgame.rand_sound2mimic()
                     duration = currgame.get_duration(mim_filename)
+                    max_amp = currgame.get_max_amp(mim_filename)
                     rep_mim = currgame.record_user(duration)
-                    currgame.play_rec(rep_mim)
-                    print("\nNot bad, {}!\n".format(currgame.username))
+                    
+                    #save the recording
                     time = datetime.datetime.now()
                     time_str = "{}".format(str(time.year)+'_'+str(time.day)+'_'+str(time.hour)+'_'+str(time.minute)+'__'+str(time.second))
                     usr_recfilename = directory_user+username+'_'+time_str+'.wav'
                     currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
+                    
+                    currgame.match_amp(usr_recfilename,max_amp)
+                    
+                    currgame.play_wav(usr_recfilename)
+                    print("\nNot bad, {}!\n".format(currgame.username))
+                    
                     fingpr_mim = currgame.get_fingpr(mim_filename)
                     fingpr_usr = currgame.get_fingpr(usr_recfilename)
                     score = currgame.comp_fingpr(fingpr_mim,fingpr_usr)
                     currgame.points += score
                     print('\nYour score for that mimic: ',score)
-                    print('\nTotal points collected so far: ',score)
+                    print('\nTotal points collected so far: ',currgame.points)
                 else:
                     print("Thanks for playing!")
                     currgame.points = max_points
@@ -56,4 +62,3 @@ if __name__ == '__main__':
                 print("\nCongratulations!!! You're a MIMIC MASTER!!")
             currgame.cont_game = False
             currgame.close_game()
-            
