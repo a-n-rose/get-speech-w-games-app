@@ -189,15 +189,29 @@ class Mimic_Game:
         plt.imshow(bitmap)    
         return(None)
         
-    def apply_filters(self,wavefile):
+    def normalize_and_filter(self,wavefile):
         wave = thinkdsp.read_wave(wavefile)
+        wave.normalize()
         wave_sp = wave.make_spectrum()
         wave_sp.low_pass(cutoff=3000,factor=0.01)
         wave_sp.high_pass(cutoff=200,factor=0.91)
         wave_filtered = wave_sp.make_wave()
+        wave_filtered.normalize()
         wave_filtered.write(wavefile)
         return None
     
+    def speech_start(self,wavefile):
+        y, sr = librosa.load(wavefile)
+        y_diff = [abs(y[i]-y[i-1]) for i in range(len(y)) if i > 0]
+        for amp_diff in y_diff:
+            if amp_diff > 0.1 and y_diff.index(amp_diff)>10:
+                new_start = y_diff.index(amp_diff)
+                print(new_start)
+                break
+        y_new = y[new_start::]
+        sf.write(wavefile,y_new,sr)
+        return None
+        
     def close_game(self):
         '''
         close and save anything that was open during the game

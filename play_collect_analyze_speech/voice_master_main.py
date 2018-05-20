@@ -34,7 +34,7 @@ if __name__ == '__main__':
                     print("Right after this plays, we will record your attempt at the sound. Get ready!")
                     mim_filename = directory_mim+currgame.rand_sound2mimic()
                     duration = currgame.get_duration(mim_filename)
-                    max_amp = currgame.get_max_amp(mim_filename)
+                    #max_amp = currgame.get_max_amp(mim_filename)
                     rep_mim = currgame.record_user(duration)
                     
                     #save the recording
@@ -43,9 +43,13 @@ if __name__ == '__main__':
                     currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
                     
                     #currgame.match_amp(usr_recfilename,max_amp)
-                    currgame.apply_filters(usr_recfilename)
+                    currgame.normalize_and_filter(usr_recfilename)
                     
                     currgame.play_wav(usr_recfilename)
+                    
+                    currgame.speech_start(usr_recfilename)
+                    currgame.play_wav(usr_recfilename)
+                    
                     print("\nNot bad, {}!\n".format(currgame.username))
                     
                     fingpr_mim = currgame.get_fingpr(mim_filename)
