@@ -8,20 +8,19 @@ Created on Mon May 14 16:13:28 2018
 """
 import thinkdsp
 
-import sounddevice as sd
-import soundfile as sf
-import random
 import glob
 import os
+import datetime
+import matplotlib.pyplot as plt
+import random
+import numpy as np
+from fuzzywuzzy import fuzz
+import sounddevice as sd
+import soundfile as sf
 import pygame
 import librosa
 import acoustid
 import chromaprint
-from fuzzywuzzy import fuzz
-import matplotlib.pyplot as plt
-import numpy as np
-import datetime
-
 
 class Mimic_Game:
     def __init__(self):
@@ -205,4 +204,3 @@ class Mimic_Game:
         close and save anything that was open during the game
         '''
         pygame.quit()
-        
