@@ -117,7 +117,7 @@ class Mimic_Game:
         else:    
             print("Hmmmmm.. something went wrong. Check your mic and try again.")
             if self.start_game('test your mic'):
-                self.test_mic(5)
+                self.test_mic(sec)
             else:
                 return False
      
@@ -132,6 +132,7 @@ class Mimic_Game:
             rand_sound.play()
             while pygame.mixer.get_busy():
                 pass
+            print("And... mimic!")
             return(filename)
         except ValueError:
             print("Value Error!")
