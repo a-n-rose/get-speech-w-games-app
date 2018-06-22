@@ -33,9 +33,17 @@ def stft(sig, frameSize, overlapFac=0.60, window=np.hanning):
     frames *= win
     return np.fft.rfft(frames)
 
-background_noise_filename = "testrec_Aislyn_2018_20_16_12__14.wav"
+background_noise_filename = "Aislyn_2018_20_12_10__3.wav"
 backgroundnoise,sr = librosa.load(background_noise_filename,sr=None)
 
 test_fft = stft(backgroundnoise,int(sr*0.025))
 test_power_spec = np.abs(test_fft)**2
 test_power_spec.shape
+
+#compare with other files...
+user_recording_filename = "Aislyn_2018_20_12_54__27.wav"
+userrec, us_sr = librosa.load(user_recording_filename,sr=None)
+
+user_fft = stft(userrec,int(sr*0.025))
+user_power_spec = np.abs(user_fft)**2
+user_power_spec.shape
