@@ -3,9 +3,6 @@
 """
 Created on Thu Jun 14 16:14:17 2018
 
-Pulled code from: https://github.com/zhr1201/Multi-channel-speech-extraction-using-DNN/blob/master/multichannel_cnn/audio_eval.py
-~ def stft()
-
 Goal: trying to mimic what Audacity does in noise reduction
 https://wiki.audacityteam.org/wiki/
 Using same FFT window size as Audacity: 2048
@@ -96,26 +93,3 @@ def power2stft(power_spec):
 def get_lengthwave(samples,sr):
     len_sec = len(samples)/float(sr)
     return len_sec
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
