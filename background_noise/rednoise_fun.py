@@ -53,6 +53,22 @@ def wave2stft(wavefile):
     f,t,stft = signal.stft(y,sr,nperseg = int(sr*0.025),nfft=2048)
     stft = np.transpose(stft)
     return stft, sr
+    
+#def wave2stft(wavefile):
+    #y, sr = librosa.load(wavefile,sr=None)
+    #stft = librosa.stft(y)
+    #stft = np.transpose(stft)
+    #return stft, sr
+
+def stft2wave(stft,sr):
+    istft = np.transpose(stft.copy())
+    f,samples = signal.istft(istft,fs=sr,nperseg=int(sr*0.025),nfft=2048)
+    return samples
+
+#def stft2wave(stft,sr):
+    #y = librosa.istft(stft)
+    #return y
+
 
 def stft2power(stft_matrix):
     stft = stft_matrix.copy()
@@ -126,9 +142,10 @@ def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row
     for i in range(len(spr)):
         if spr[i] <= npm[i] + npv[i]:
             stft_r[i] = 1e-3
-        else:
-            mag = npm[i]/float(spr[i])
-            stft_r[i] *= mag
+        #else:
+            #diff = spr[i] - (npm[i]+npv[i])
+            #frac = diff/spr[i]
+            #stft_r[i] -= (frac*stft_r[i])
     return stft_r
 #
 #def red_noise(noise_powerspec_mean, speech_powerspec_row,speech_stft_row):
@@ -145,10 +162,6 @@ def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row
 #            
     
 
-def stft2wave(stft,sr):
-    istft = np.transpose(stft.copy())
-    f,samples = signal.istft(istft,fs=sr,nperseg=int(sr*0.025),nfft=2048)
-    return samples
 
 def savewave(filename,samples,sr):
     librosa.output.write_wav(filename,samples,sr)

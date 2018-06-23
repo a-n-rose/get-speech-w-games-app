@@ -1,43 +1,33 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jun 23 21:02:09 2018
 
-import matplotlib.pyplot as plt
+@author: airos
+"""
+
+import librosa
 import numpy as np
 
-from rednoise_fun import wave2stft, stft2power, stft2amp, get_mean_bandwidths, rednoise, stft2wave, savewave, get_var_bandwidths, get_date
-
-if __name__ == '__main__':
-    noise_file = 'Aislyn_2018_20_12_10__3.wav'
-    speech_file = 'Aislyn_2018_20_12_54__27.wav'
-    
-    #subtract noise 
-    
-    #get stft and sampling rage
-    noise_stft, noise_sr = wave2stft(noise_file)
-    speech_stft, speech_sr = wave2stft(speech_file)
-    
-    #get amplitude
-    noise_amp = stft2amp(noise_stft)
-    sp_amp = stft2amp(speech_stft)
-    #get mean amplitude (for each bandwidth)
-    noise_amp_mean = get_mean_bandwidths(noise_amp)
-    #get amplitude variance
-    noise_amp_var = get_var_bandwidths(noise_amp)
-    
-    #subtract noise from power and stft
-#    start_col = 215
-#    col_len = 30
-#    stft_red_100 = rednoise_short(noise_pw_mean,sp_amp[100],speech_stft[100],start_col,col_len) 
-    stft_red = [rednoise(noise_amp_mean,noise_amp_var,sp_amp[row],speech_stft[row]) for row in range(speech_stft.shape[0])]
-    
-    #transform stft back to wave
-    speech_red = stft2wave(stft_red,speech_sr)
-    date = get_date()
-    savewave("rednoise_{}.wav".format(date),speech_red,speech_sr)
-    
-
-    
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date
 
 
-    
-    
+noise = 'Aislyn_2018_20_12_10__3.wav'
+speech = 'Aislyn_2018_20_12_54__27.wav'
+owl = 'dove-Mike_Koenig-1208819046_orig.wav'
 
-    
+n,nsr = wave2stft(noise)
+sp,spsr = wave2stft(speech)
+owl,owlsr = wave2stft(owl)
+
+n_power = stft2power(n)
+sp_power = stft2power(sp)
+
+npow_m = get_mean_bandwidths(n_power)
+npow_v = get_var_bandwidths(n_power)
+
+sp_stftred = np.array([rednoise(npow_m,npow_v,sp_power[i],sp[i]) for i in range(sp.shape[0])])
+
+wave_sample = stft2wave(sp_stftred,spsr)
+date = get_date()
+savewave('rednoise_{}.wav'.format(date),wave_sample,spsr)
