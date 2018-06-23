@@ -76,3 +76,17 @@ plt.plot(sp1pm_sqrt)
 plt.plot(sp2pm_sqrt)
 plt.plot(sp3pm_sqrt)
 plt.plot(opm_sqrt)
+
+
+#quick measure of similarity...? hahaha! Nope.
+#sum(nr-nf)
+#sum(nr-nf)/sum(nf)
+sum(npm_sqrt)
+sum(sp1pm_sqrt)
+sum(sp2pm_sqrt)
+sum(sp3pm_sqrt)
+sum(opm_sqrt)
+
+sum(npm_sqrt - opm_sqrt[:224])/sum(opm_sqrt)
+sum(npm_sqrt - sp3pm_sqrt[:224])
+sum(sp3pm_sqrt[:-1] - opm_sqrt)/sum(opm_sqrt)
