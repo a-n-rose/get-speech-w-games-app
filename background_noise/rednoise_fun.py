@@ -24,11 +24,20 @@ def get_date():
     time_str = "{}y{}m{}d{}h{}m{}s".format(time.year,time.month,time.day,time.hour,time.minute,time.second)
     return(time_str)
 
+def load_wave(wavefile):
+    y, sr = librosa.load(wavefile, sr=None)
+    return y,sr
+
 def wave2stft(wavefile):
     y, sr = librosa.load(wavefile,sr=None)
     f,t,stft = signal.stft(y,sr,nperseg = int(sr*0.025),nfft=2048)
     stft = np.transpose(stft)
     return stft, sr
+
+def get_stft(y,sr):
+    f,t,stft = signal.stft(y,sr,nperseg = int(sr*0.025),nfft=2048)
+    stft = np.transpose(stft)
+    return stft
 
 def stft2wave(stft,sr):
     istft = np.transpose(stft.copy())
@@ -49,9 +58,10 @@ def get_pitch(y,sr):
     pitches,mag = librosa.piptrack(y=y,sr=sr)
     return pitches,mag
 
+#should this be an array?
 def get_pitch_mean(matrix_pitches):
     p = matrix_pitches.copy()
-    p_mean = [np.mean(p[:,time_unit]) for time_unit in range(p.shape[1])]
+    p_mean = np.array([np.mean(p[:,time_unit]) for time_unit in range(p.shape[1])])
     p_mean = np.transpose(p_mean)
     #remove beginning artifacts:
     pmean = p_mean[int(len(p_mean)*0.07):]
@@ -61,14 +71,16 @@ def pitch_sqrt(pitch_mean):
     psqrt = np.sqrt(pitch_mean)
     return psqrt
     
+#should this be an array?
 def get_mean_bandwidths(matrix_bandwidths):
     bw = matrix_bandwidths.copy()
-    bw_mean = [np.mean(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
+    bw_mean = np.array([np.mean(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])])
     return bw_mean
 
+#should this be an array?
 def get_var_bandwidths(matrix_bandwidths):
     bw = matrix_bandwidths.copy()
-    bw_var = [np.var(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
+    bw_var = np.array([np.var(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])])
     return bw_var
 
 def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row,speech_stft_row):
