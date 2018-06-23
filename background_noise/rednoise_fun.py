@@ -13,7 +13,6 @@ Other research using fft to capture speech features have used 25ms windows w 10m
 @author: airos
 """
 
-
 import numpy as np
 from numpy.lib import stride_tricks
 import librosa
@@ -81,7 +80,16 @@ def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row
         if spr[i] <= npm[i] + npv[i]:
             stft_r[i] = 1e-3
     return stft_r
-
+    
+def matchvol(target_powerspec, speech_powerspec, speech_stft):
+    tmp = np.max(target_powerspec)
+    smp = np.max(speech_powerspec)
+    stft = speech_stft.copy()
+    if smp > tmp:
+        mag = tmp/smp
+        stft *= mag
+    return stft
+        
 def savewave(filename,samples,sr):
     librosa.output.write_wav(filename,samples,sr)
     print("File has been saved")

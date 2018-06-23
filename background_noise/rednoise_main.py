@@ -9,7 +9,7 @@ Created on Sat Jun 23 21:02:09 2018
 import librosa
 import numpy as np
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol
 
 
 noise = 'Aislyn_2018_20_12_10__3.wav'
@@ -22,6 +22,7 @@ owl,owlsr = wave2stft(owl)
 
 n_power = stft2power(n)
 sp_power = stft2power(sp)
+o_power = stft2power(owl)
 
 npow_m = get_mean_bandwidths(n_power)
 npow_v = get_var_bandwidths(n_power)
@@ -31,3 +32,9 @@ sp_stftred = np.array([rednoise(npow_m,npow_v,sp_power[i],sp[i]) for i in range(
 wave_sample = stft2wave(sp_stftred,spsr)
 date = get_date()
 savewave('rednoise_{}.wav'.format(date),wave_sample,spsr)
+
+#now match volume/max power
+sp_stftmatched = matchvol(o_power,sp_power,sp_stftred)
+wave_sample2 = stft2wave(sp_stftmatched,spsr)
+date = get_date()
+savewave('rednoise2_{}.wav'.format(date),wave_sample2,spsr)
