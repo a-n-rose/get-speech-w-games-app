@@ -21,6 +21,13 @@ import numpy as np
 from numpy.lib import stride_tricks
 import librosa
 from scipy import signal
+import datetime
+
+def get_date():
+    time = datetime.datetime.now()
+    time_str = "{}y{}m{}d{}h{}m{}s".format(time.year,time.month,time.day,time.hour,time.minute,time.second)
+    return(time_str)
+
 
 #2048 based off of Audacity
 def stft(sig, frameSize= 2048, overlapFac=0.60, window=np.hanning):
@@ -61,6 +68,11 @@ def get_mean_bandwidths(matrix_bandwidths):
     bw = matrix_bandwidths.copy()
     bw_mean = [np.mean(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
     return bw_mean
+
+def get_var_bandwidths(matrix_bandwidths):
+    bw = matrix_bandwidths.copy()
+    bw_var = [np.var(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
+    return bw_var
                                                                
 #def red_noise(noise_powerspec_mean,speech_powerspec_row, ):
     #npm = noise_powerspec_mean
@@ -90,12 +102,13 @@ def rednoise_short(noise_powerspec_mean, speech_powerspec_row,speech_stft_row, c
             print(stft_r[i])
     return stft_r
 
-def rednoise(noise_powerspec_mean, speech_powerspec_row,speech_stft_row):
+def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row,speech_stft_row):
     npm = noise_powerspec_mean
+    npv = noise_powerspec_variance
     spr = speech_powerspec_row
     stft_r = speech_stft_row.copy()
     for i in range(len(spr)):
-        if spr[i] <= npm[i]:
+        if spr[i] <= npm[i] + npv[i]:
             stft_r[i] = 1e-3
         else:
             mag = npm[i]/float(spr[i])
