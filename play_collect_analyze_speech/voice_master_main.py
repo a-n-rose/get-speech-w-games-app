@@ -5,11 +5,27 @@ Created on Tue May 15 22:22:15 2018
 
 @author: airos
 """
+import numpy as np
 
+from rednoise_run import wave2pitchmeansqrt
 from voice_master import Mimic_Game
 import os
+
 #import shutil
-    
+   
+   
+def compare_sim(pitch_mean1, pitch_mean2):
+    pm1 = pitch_mean1.copy()
+    pm2 = pitch_mean2.copy()
+    if len(pm1) != len(pm2):
+        index_min = np.argmin([len(pm1),len(pm2)])
+        if index_min > 0:
+            pm1 = pm1[:len(pm2)]
+        else:
+            pm2 = pm2[:len(pm1)]
+    corrmatrix = np.corrcoef(pm1,pm2)
+    return(corrmatrix)
+   
 
 if __name__ == '__main__':
     currgame = Mimic_Game()
@@ -40,25 +56,31 @@ if __name__ == '__main__':
                     duration = currgame.get_duration(mim_filename)
                     #max_amp = currgame.get_max_amp(mim_filename)
                     rep_mim = currgame.record_user(duration)
-                    
+
                     #save the recording
                     time_str = currgame.get_date()
                     usr_recfilename = directory_user+username+'_'+time_str+'.wav'
-                    currgame.save_rec(usr_recfilename,rep_mim,fs=44100)
+                    currgame.save_rec(usr_recfilename,rep_mim,fs=22050)
                     
-                    #currgame.match_amp(usr_recfilename,max_amp)
-                    currgame.normalize_and_filter(usr_recfilename)
+                    #subtract noise, match target recording
+                    # get and compare pitch means (sqrt)
+                    pitchsqrt_speech,pitchsqrt_target,pitchsqrt_noise = wave2pitchmeansqrt(usr_recfilename,mim_filename,currgame.noisefile)
                     
-                    currgame.play_wav(usr_recfilename)
+                    #compare similarities
+                    sp2noise = compare_sim(pitchsqrt_speech,pitchsqrt_noise)
+                    sp2target = compare_sim(pitchsqrt_speech,pitchsqrt_target)
                     
-                    print("\nNot bad, {}!\n".format(currgame.username))
+                    score_noise = sum(sum(sp2noise))
+                    score_target = sum(sum(sp2target))
                     
-                    fingpr_mim = currgame.get_fingpr(mim_filename)
-                    fingpr_usr = currgame.get_fingpr(usr_recfilename)
-                    score = currgame.comp_fingpr(fingpr_mim,fingpr_usr)
-                    currgame.points += score
-                    print('\nYour score for that mimic: ',score)
-                    print('\nTotal points collected so far: ',currgame.points)
+                    score = score_target/score_noise
+                    points = int(score**10) * 10
+                    if score > 1:
+                        print("Not bad! You earned {} points.".format(points))
+                    else:
+                        print("You call that a mimic? No points earned. Try again!")
+                        
+                    currgame.points += points
                 else:
                     print("Thanks for playing!")
                     currgame.points = max_points
