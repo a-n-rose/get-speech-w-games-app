@@ -114,3 +114,16 @@ def power2stft(power_spec):
 def get_lengthwave(samples,sr):
     len_sec = len(samples)/float(sr)
     return len_sec
+
+def compare_sim(pitch_mean1, pitch_mean2):
+    pm1 = pitch_mean1.copy()
+    pm2 = pitch_mean2.copy()
+    if len(pm1) != len(pm2):
+        index_min = np.argmin([len(pm1),len(pm2)])
+        if index_min > 0:
+            pm1 = pm1[:len(pm2)]
+        else:
+            pm2 = pm2[:len(pm1)]
+    corrmatrix = np.corrcoef(pm1,pm2)
+    return(corrmatrix)
+
