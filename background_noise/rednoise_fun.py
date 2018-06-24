@@ -10,6 +10,8 @@ Which leads to 1025 frequency bands
 
 Other research using fft to capture speech features have used 25ms windows w 10ms window shifts
 
+#with scipy.signal.istft I am having issues maintaining 25ms windows w 10 ms shifts... for now leaving out NFFT = 2048, and using 50ms windows instead. COLA constraints have failed otherwise. Will continue working on that tho... in the future
+
 @author: airos
 """
 
@@ -25,27 +27,20 @@ def get_date():
     return(time_str)
 
 def load_wave(wavefile):
-    #y, sr = librosa.load(wavefile, sr=None)
     y, sr = librosa.load(wavefile)
     return y,sr
 
 def wave2stft(wavefile):
-    #y, sr = librosa.load(wavefile,sr=None)
     y, sr = librosa.load(wavefile)
     if len(y)%2 != 0:
         y = y[:-1]
-    #hop = int(sr*0.01)
     nperseg = int(sr*0.05)
-    #noverlap = nperseg - hop
-    #f,t,stft = signal.stft(y,sr,nperseg = nperseg,noverlap=noverlap)
     f,t,stft = signal.stft(y,sr,nperseg = nperseg)
     stft = np.transpose(stft)
     return stft, sr
 
 def stft2wave(stft,sr):
-    #hop = int(sr*0.01)
     nperseg = int(sr*0.05)
-    #noverlap = nperseg - hop
     istft = np.transpose(stft.copy())
     f,samples = signal.istft(istft,fs=sr,nperseg=nperseg)
     return samples
@@ -61,7 +56,6 @@ def stft2amp(stft_matrix):
     return amp
 
 def get_pitch(wavefile):
-    #y,sr = librosa.load(wavefile, sr=None)
     y, sr = librosa.load(wavefile)
     if len(y)%2 != 0:
         y = y[:-1]
