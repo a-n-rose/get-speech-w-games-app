@@ -140,12 +140,19 @@ class Mimic_Game:
             rand_sound.play()
             while pygame.mixer.get_busy():
                 pass
-            print("And... mimic!")
             return(filename)
         except ValueError:
             print("Value Error!")
         finally:
             os.chdir('..')
+        return None
+        
+    def play_go(self):
+        go_sound = pygame.mixer.Sound('231277__steel2008__race-start-ready-go.wav')
+        go_sound.play()
+        while pygame.mixer.get_busy():
+            pass
+        print("And... mimic!")
         return None
         
     def get_duration(self,wavefile):

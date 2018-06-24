@@ -57,6 +57,7 @@ if __name__ == '__main__':
                     mim_filename = directory_mim+currgame.rand_sound2mimic()
                     duration = currgame.get_duration(mim_filename)
                     #max_amp = currgame.get_max_amp(mim_filename)
+                    currgame.play_go()
                     rep_mim = currgame.record_user(duration)
 
                     #save the recording
