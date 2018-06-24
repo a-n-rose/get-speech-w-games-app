@@ -30,6 +30,8 @@ def load_wave(wavefile):
 
 def wave2stft(wavefile):
     y, sr = librosa.load(wavefile,sr=None)
+    if len(y)%2 != 0:
+        y = y[:-1]
     hop = int(sr*0.01)
     nperseg = int(sr*0.025)
     noverlap = nperseg - hop
@@ -57,6 +59,8 @@ def stft2amp(stft_matrix):
 
 def get_pitch(wavefile):
     y,sr = librosa.load(wavefile, sr=None)
+    if len(y)%2 != 0:
+        y = y[:-1]
     pitches,mag = librosa.piptrack(y=y,sr=sr)
     return pitches,mag
 
