@@ -30,18 +30,19 @@ def load_wave(wavefile):
 
 def wave2stft(wavefile):
     y, sr = librosa.load(wavefile,sr=None)
-    f,t,stft = signal.stft(y,sr,nperseg = int(sr*0.025),nfft=2048)
+    hop = int(sr*0.01)
+    nperseg = int(sr*0.025)
+    noverlap = nperseg - hop
+    f,t,stft = signal.stft(y,sr,nperseg = nperseg,noverlap=noverlap)
     stft = np.transpose(stft)
     return stft, sr
 
-def get_stft(y,sr):
-    f,t,stft = signal.stft(y,sr,nperseg = int(sr*0.025),nfft=2048)
-    stft = np.transpose(stft)
-    return stft
-
 def stft2wave(stft,sr):
+    hop = int(sr*0.01)
+    nperseg = int(sr*0.025)
+    noverlap = nperseg - hop
     istft = np.transpose(stft.copy())
-    f,samples = signal.istft(istft,fs=sr,nperseg=int(sr*0.025),nfft=2048)
+    f,samples = signal.istft(istft,fs=sr,nperseg=nperseg,noverlap=noverlap)
     return samples
 
 def stft2power(stft_matrix):
@@ -54,7 +55,8 @@ def stft2amp(stft_matrix):
     amp = np.abs(stft)
     return amp
 
-def get_pitch(y,sr):
+def get_pitch(wavefile):
+    y,sr = librosa.load(wavefile, sr=None)
     pitches,mag = librosa.piptrack(y=y,sr=sr)
     return pitches,mag
 
