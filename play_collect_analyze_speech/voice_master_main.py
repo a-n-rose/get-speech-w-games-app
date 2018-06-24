@@ -29,7 +29,9 @@ def compare_sim(pitch_mean1, pitch_mean2):
 
 if __name__ == '__main__':
     currgame = Mimic_Game()
-    username = currgame.start_game('start', username = True)
+    #username = currgame.start_game('start', username = True)
+    username = 'Aislyn'
+    currgame.username = username
     max_points = 1000
     directory_mim = './soundfiles/'
     directory_user = './user_recordings/'
@@ -81,6 +83,7 @@ if __name__ == '__main__':
                         print("You call that a mimic? No points earned. Try again!")
                         
                     currgame.points += points
+                    print("Total points earned: {}".format(currgame.points))
                 else:
                     print("Thanks for playing!")
                     currgame.points = max_points
