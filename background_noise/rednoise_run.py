@@ -42,6 +42,8 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     tp_mean = get_pitch_mean(t_pitch)
     tpm_sqrt = pitch_sqrt(tp_mean)
     return (ypm_sqrt, tpm_sqrt, npm_sqrt)
+
+
     
     
     

@@ -40,6 +40,7 @@ class Mimic_Game:
         self.username = None
         self.cont_game = True
         self.points = 0
+
         
     def enter_username(self):
         username = input("Please enter your username: ")
@@ -69,8 +70,8 @@ class Mimic_Game:
     
     def record_user(self,duration):
         duration = duration
-        fs = 44100
-        user_rec = sd.rec(int(duration*fs),samplerate=fs,channels=2)
+        fs = 22050
+        user_rec = sd.rec(int(duration*fs),samplerate=fs,channels=1)
         sd.wait()   
         return(user_rec)
     
@@ -83,7 +84,7 @@ class Mimic_Game:
         return False
     
     def play_rec(self,recording):
-        fs = 44100
+        fs = 22050
         sd.play(recording, fs)
         sd.wait()
         return None
@@ -98,7 +99,8 @@ class Mimic_Game:
 
         if self.check_rec(user_rec):
             filename = './user_recordings/testrec_{}.wav'.format(self.username+'_'+self.get_date())
-            self.save_rec(filename,user_rec,fs=44100)
+            self.noisefile = filename
+            self.save_rec(filename,user_rec,fs=22050)
             return user_rec
         else:
             print(
@@ -118,8 +120,8 @@ class Mimic_Game:
         if user_rec.any():
             sd.wait()
             print("Thanks!")
-            self.play_rec(user_rec)
-            sd.wait()
+            #self.play_rec(user_rec)
+            #sd.wait()
         else:    
             print("Hmmmmm.. something went wrong. Check your mic and try again.")
             if self.start_game('test your mic'):
