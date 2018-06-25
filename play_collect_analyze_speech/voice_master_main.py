@@ -12,7 +12,7 @@ from voice_master import Mimic_Game
 import os
 
 #import shutil
-   
+  
    
 def compare_sim(pitch_mean1, pitch_mean2):
     pm1 = pitch_mean1.copy()
@@ -40,8 +40,7 @@ if __name__ == '__main__':
     if username:
         sec = 5
 #        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} seconds.\n\n".format(sec))
-        
-        #have to figure out how to use the silence to cancel out background noise
+
         print("\nThis next step will take just {} seconds\n".format(sec))
         test_mic = currgame.start_game('test your mic')
         if test_mic:
@@ -77,13 +76,15 @@ if __name__ == '__main__':
                     score_target = sum(sum(sp2target))
                     
                     score = score_target/score_noise
-                    points = int(score**10) * 10
-                    if score > 1:
+                
+                    if score > 1.5:
                         print("Not bad! You earned {} points.".format(points))
+                        points = int(score**10) * 10
+                        currgame.points += points
                     else:
                         print("You call that a mimic? No points earned. Try again!")
                         
-                    currgame.points += points
+                    
                     print("Total points earned: {}".format(currgame.points))
                 else:
                     print("Thanks for playing!")
