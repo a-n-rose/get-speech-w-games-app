@@ -22,6 +22,8 @@ import librosa
 import acoustid
 import chromaprint
 
+
+
 class Mimic_Game:
     def __init__(self):
         print(
@@ -51,7 +53,7 @@ class Mimic_Game:
     
     def get_date(self):
         time = datetime.datetime.now()
-        time_str = "{}".format(str(time.year)+'_'+str(time.day)+'_'+str(time.hour)+'_'+str(time.minute)+'__'+str(time.second))
+        time_str = "{}y{}m{}d{}h{}m{}s".format(time.year,time.month,time.day,time.hour,time.minute,time.second)
         return(time_str)
     
     def start_game(self,action,username = None):
