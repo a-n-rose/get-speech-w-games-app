@@ -43,6 +43,7 @@ class Mimic_Game:
         self.cont_game = True
         self.points = 0
 
+
         
     def enter_username(self):
         username = input("Please enter your username: ")

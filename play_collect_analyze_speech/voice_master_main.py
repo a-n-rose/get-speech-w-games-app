@@ -77,7 +77,7 @@ if __name__ == '__main__':
                     
                     score = score_target/score_noise
                 
-                    if score > 1.5:
+                    if score > 1.25:
                         points = int(score**2) * 10
                         print("Not bad! You earned {} points.".format(points))
                         currgame.points += points
