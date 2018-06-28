@@ -2,23 +2,32 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths,  get_rms, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, voice_onset_index, get_rms
 
 
 def wave2pitchmeansqrt(wavefile, target, noise):
-    y_stft, sr = wave2stft(wavefile)
+    y_stft, y, sr = wave2stft(wavefile)
     y_power = stft2power(y_stft)
-    n_stft, nsr = wave2stft(noise)
+    n_stft, ny, nsr = wave2stft(noise)
     n_power = stft2power(n_stft)
-    t_stft, tsr = wave2stft(target)
+    t_stft, ty, tsr = wave2stft(target)
     t_power = stft2power(t_stft)
     
-    npow_mean = get_rms(n_power)
+    npow_mean = get_mean_bandwidths(n_power)
+    #npow_mean = get_rms(n_power)
     npow_var = get_var_bandwidths(n_power)
     
     y_stftred = np.array([rednoise(npow_mean,npow_var,y_power[i],y_stft[i]) for i in range(y_stft.shape[0])])
     
-    rednoise_samp = stft2wave(y_stftred,sr)
+    #voice_start = voice_onset_index(y_stftred,npow_mean,npow_var)
+    #if voice_start:
+        #y_stft_voice = y_stftred[voice_start:]
+        #voicestart_samp = stft2wave(y_stft_voice,sr)
+        #date = get_date()
+        #savewave('rednoise_speechstart_{}.wav'.formt(date),voicestart_samp,sr)
+        #print('Removed silence from beginning of recording. File saved.')
+    
+    rednoise_samp = stft2wave(y_stftred,len(y))
     date = get_date()
     savewave('rednoise_{}.wav'.format(date),rednoise_samp,sr)
     print('Background noise reduction complete. File saved.')

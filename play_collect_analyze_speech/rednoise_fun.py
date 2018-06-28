@@ -32,23 +32,24 @@ def load_wave(wavefile):
 
 def wave2stft(wavefile):
     y, sr = librosa.load(wavefile)
-    nperseg = int(sr*0.025)
-    noverlap = int(nperseg*(3/4))
     if len(y)%2 != 0:
         y = y[:-1]
-    nperseg = int(sr*0.05)
-    f,t,stft = signal.stft(y,sr,nperseg = nperseg)
+    #nperseg = int(sr*0.05)
+    #f,t,stft = signal.stft(y,sr,nperseg = None)
+    stft = librosa.stft(y)
     stft = np.transpose(stft)
-    return stft, sr
+    return stft, y, sr
 
-def stft2wave(stft,sr):
+def stft2wave(stft,len_origsamp):
     #get num bandwidths... with this COLA constraints get satisfied for istft
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.istft.html
-    nperseg = stft.shape[1]
+    #nperseg = stft.shape[1]
+    #nperseg = int(sr*0.5)
     #3/4 works well with Hanning window, and satisfies COLA constraints
-    noverlap = int(nperseg*(3/4))
+    #noverlap = int(nperseg*(3/4))
     istft = np.transpose(stft.copy())
-    f,samples = signal.istft(istft,fs=sr,nperseg=nperseg)
+    #f,samples = signal.istft(istft,fs = sr,nperseg=nperseg)
+    samples = librosa.istft(istft,length=len_origsamp)
     return samples
 
 def stft2power(stft_matrix):
