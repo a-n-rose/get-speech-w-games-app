@@ -57,12 +57,14 @@ def stft2amp(stft_matrix):
     amp = np.abs(stft)
     return amp
 
-def get_energy(matrix_bandwidths):
-    rms_list = [np.sqrt(sum(np.abs(matrix_bandwidths[row])**2)/matrix_bandwidths.shape[1]) for row in range(len(matrix_bandwidths))]
+def get_energy(stft_matrix):
+    #stft.shape[1] == bandwidths/frequencies
+    #stft.shape[0] pertains to the time domain
+    rms_list = [np.sqrt(sum(np.abs(stft_matrix[row])**2)/stft_matrix.shape[1]) for row in range(len(stft_matrix))]
     return rms_list
 
-def get_energy_mean(rms_list):
-    mean = sum(rms_list)/len(rms_list)
+def get_energy_mean(energy_list):
+    mean = sum(energy_list)/len(energy_list)
     return mean
 
 def get_pitch(wavefile):
@@ -103,16 +105,6 @@ def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row
         if spr[i] <= npm[i] + npv[i]:
             stft_r[i] = 1e-3
     return stft_r
-
-#def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row,speech_stft_row):
-    #npm = noise_powerspec_mean
-    #npv = noise_powerspec_variance
-    #spr = speech_powerspec_row
-    #stft_r = speech_stft_row.copy()
-    #for i in range(len(spr)):
-        #if spr[i] <= npm[i] + npv[i]:
-            #stft_r[i] = 1e-3
-    #return stft_r
     
     
 def matchvol(target_powerspec, speech_powerspec, speech_stft):
