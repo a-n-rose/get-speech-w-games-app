@@ -150,10 +150,18 @@ def voice_index(rms_speech,rms_mean_noise = None, start = True):
             if suspended_energy(rms_speech,row,rms_mean_noise,start):
                 if start:
                     #to catch plosive sounds
-                    return row-1
+                    while row >= 0:
+                        row += 1
+                        row += 1
+                        break
+                    return row
                 else:
-                    #to catch quiet consonant endings
-                    return row+1
+                    #to catch quiet cronsonant endings
+                    while row <= len(rms_speech):
+                        row -= 1
+                        row -= 1
+                        break
+                    return row
     else:
         print("No speech detected.")
     return None
