@@ -125,11 +125,14 @@ def matchvol(target_powerspec, speech_powerspec, speech_stft):
     return stft
 
 
-def voice_onset_index(rms_speech, rms_mean_noise):
+def voice_onset_index(rms_speech, rms_mean_noise=None):
+    #i.e. if there is no background noise
+    if rms_mean_noise == None:
+        rms_mean_noise=1
     for row in range(len(rms_speech)):
         if rms_speech[row] > rms_mean_noise:
             if row < len(rms_speech)-3:
-                if rms_speech[row+1] and rms_speech[row+2] > rms_mean_noise:
+                if rms_speech[row+1] and rms_speech[row+2] and rms_speech[row+3]> rms_mean_noise:
                     if row > 0:
                         row-=1
                     return row
