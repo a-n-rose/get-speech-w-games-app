@@ -125,20 +125,39 @@ def matchvol(target_powerspec, speech_powerspec, speech_stft):
     return stft
 
 
-def voice_onset_index(rms_speech, rms_mean_noise=None):
-    #i.e. if there is no background noise
-    if rms_mean_noise == None:
-        rms_mean_noise=1
-    for row in range(len(rms_speech)):
-        if rms_speech[row] > rms_mean_noise:
-            if row < len(rms_speech)-3:
-                if rms_speech[row+1] and rms_speech[row+2] and rms_speech[row+3]> rms_mean_noise:
-                    if row > 0:
-                        row-=1
-                    return row
+def suspended_energy(rms_speech,row,rms_mean_noise,start):
+    if start == True:
+        if rms_speech[row+1] and rms_speech[row+2] > rms_mean_noise:
+            return True
     else:
-        print("No speech detected")
+        if rms_speech[row-1] and rms_speech[row-2] > rms_mean_noise:
+            return True
+
+
+def voice_index(rms_speech,rms_mean_noise = None, start = True):
+    if rms_mean_noise == None:
+        rms_mean_noise = 1
+    if start == True:
+        side = 1
+        start = 0
+        end = len(rms_speech)
+    else:
+        side = -1
+        start = len(rms_speech)-1
+        end = -1
+    for row in range(start,end,side):
+        if rms_speech[row] > rms_mean_noise:
+            if suspended_energy(rms_speech,row,rms_mean_noise,start):
+                if start:
+                    #to catch plosive sounds
+                    return row-1
+                else:
+                    #to catch quiet consonant endings
+                    return row+1
+    else:
+        print("No speech detected.")
     return None
+
         
 def savewave(filename,samples,sr):
     librosa.output.write_wav(filename,samples,sr)
