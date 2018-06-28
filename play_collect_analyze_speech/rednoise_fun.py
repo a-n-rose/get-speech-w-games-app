@@ -126,7 +126,7 @@ def suspended_energy(rms_speech,row,rms_mean_noise,start):
             return True
 
 
-def sound_index(rms_speech,rms_mean_noise = None, start = True):
+def sound_index(rms_speech, start = True, rms_mean_noise = None):
     if rms_mean_noise == None:
         rms_mean_noise = 1
     if start == True:
