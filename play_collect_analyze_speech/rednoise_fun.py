@@ -31,7 +31,7 @@ def load_wave(wavefile):
     return y,sr
 
 def wave2stft(wavefile):
-    y, sr = librosa.load(wavefile,sr=None)
+    y, sr = librosa.load(wavefile)
     nperseg = int(sr*0.025)
     noverlap = int(nperseg*(3/4))
     if len(y)%2 != 0:
@@ -148,4 +148,16 @@ def compare_sim(pitch_mean1, pitch_mean2):
             pm2 = pm2[:len(pm1)]
     corrmatrix = np.corrcoef(pm1,pm2)
     return(corrmatrix)
+
+def voice_onset_index(stft, stft_powermean, stft_var):
+    for row in range(len(stft)):
+        if sum(np.abs(stft[row])) > sum(stft_powermean + stft_var):
+            if row < len(stft) - 3:
+                if sum(np.abs(stft[row+1])) and sum(np.abs(stft[row+2])) and  sum(np.abs(stft[row+3])) > sum(stft_powermean + stft_var):
+                    return row 
+        else:
+            print("No speech detected")
+    return None
+                    
+    
 
