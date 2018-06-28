@@ -2,14 +2,18 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, voice_onset_index, get_rms
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, voice_onset_index, get_energy, get_energy_mean
 
 
 def wave2pitchmeansqrt(wavefile, target, noise):
     y_stft, y, sr = wave2stft(wavefile)
     y_power = stft2power(y_stft)
+    y_energy = get_energy(y_stft)
     n_stft, ny, nsr = wave2stft(noise)
     n_power = stft2power(n_stft)
+    n_energy = get_energy(n_stft)
+    n_energy_mean = get_energy_mean(n_energy)
+    
     t_stft, ty, tsr = wave2stft(target)
     t_power = stft2power(t_stft)
     
@@ -18,14 +22,20 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     npow_var = get_var_bandwidths(n_power)
     
     y_stftred = np.array([rednoise(npow_mean,npow_var,y_power[i],y_stft[i]) for i in range(y_stft.shape[0])])
+
     
-    #voice_start = voice_onset_index(y_stftred,npow_mean,npow_var)
-    #if voice_start:
-        #y_stft_voice = y_stftred[voice_start:]
-        #voicestart_samp = stft2wave(y_stft_voice,sr)
-        #date = get_date()
-        #savewave('rednoise_speechstart_{}.wav'.formt(date),voicestart_samp,sr)
-        #print('Removed silence from beginning of recording. File saved.')
+    voice_start = voice_onset_index(y_energy,n_energy_mean)
+    if voice_start:
+        print(voice_start)
+        print(voice_start/len(y_energy))
+        start = voice_start/len(y_energy)
+        start_time = (len(y)*start)/sr
+        print("Start time: {} sec".format(start_time))
+        y_stft_voice = y_stftred[voice_start:]
+        voicestart_samp = stft2wave(y_stft_voice,len(y))
+        date = get_date()
+        savewave('rednoise_speechstart_{}.wav'.format(date),voicestart_samp,sr)
+        print('Removed silence from beginning of recording. File saved.')
     
     rednoise_samp = stft2wave(y_stftred,len(y))
     date = get_date()
@@ -34,7 +44,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     print('Now matching volume to target recording.')
     
     y_stftmatched = matchvol(t_power,y_power,y_stftred)
-    matchvol_samp = stft2wave(y_stftmatched,sr)
+    matchvol_samp = stft2wave(y_stftmatched,len(y))
     savewave('rednoise2_{}.wav'.format(date),rednoise_samp,sr)
     print('Matched volume. File saved.')
     print('Now extracting pitch information')

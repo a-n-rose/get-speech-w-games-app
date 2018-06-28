@@ -57,6 +57,14 @@ def stft2amp(stft_matrix):
     amp = np.abs(stft)
     return amp
 
+def get_energy(matrix_bandwidths):
+    rms_list = [np.sqrt(sum(np.abs(matrix_bandwidths[row])**2)/matrix_bandwidths.shape[1]) for row in range(len(matrix_bandwidths))]
+    return rms_list
+
+def get_energy_mean(rms_list):
+    mean = sum(rms_list)/len(rms_list)
+    return mean
+
 def get_pitch(wavefile):
     y, sr = librosa.load(wavefile)
     if len(y)%2 != 0:
@@ -80,11 +88,6 @@ def get_mean_bandwidths(matrix_bandwidths):
     bw = matrix_bandwidths.copy()
     bw_mean = [np.mean(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
     return bw_mean
-
-def get_rms(matrix_bandwidths):
-    bw = matrix_bandwidths.copy()
-    bw = np.sqrt(sum(bw**2)/len(bw))
-    return bw
 
 def get_var_bandwidths(matrix_bandwidths):
     bw = matrix_bandwidths.copy()
@@ -120,6 +123,17 @@ def matchvol(target_powerspec, speech_powerspec, speech_stft):
         mag = tmp/smp
         stft *= mag
     return stft
+
+
+def voice_onset_index(rms_speech, rms_mean_noise):
+    for row in range(len(rms_speech)):
+        if rms_speech[row] > rms_mean_noise:
+            if row < len(rms_speech)-3:
+                if rms_speech[row+1] and rms_speech[row+2] and rms_speech[row+3] > rms_mean_noise:
+                    return row
+    else:
+        print("No speech detected")
+    return None
         
 def savewave(filename,samples,sr):
     librosa.output.write_wav(filename,samples,sr)
@@ -144,16 +158,3 @@ def compare_sim(pitch_mean1, pitch_mean2):
             pm2 = pm2[:len(pm1)]
     corrmatrix = np.corrcoef(pm1,pm2)
     return(corrmatrix)
-
-def voice_onset_index(stft, stft_powermean, stft_var):
-    for row in range(len(stft)):
-        if sum(np.abs(stft[row])) > sum(stft_powermean + stft_var):
-            if row < len(stft) - 3:
-                if sum(np.abs(stft[row+1])) and sum(np.abs(stft[row+2])) and  sum(np.abs(stft[row+3])) > sum(stft_powermean + stft_var):
-                    return row 
-        else:
-            print("No speech detected")
-    return None
-                    
-    
-
