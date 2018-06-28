@@ -129,7 +129,9 @@ def voice_onset_index(rms_speech, rms_mean_noise):
     for row in range(len(rms_speech)):
         if rms_speech[row] > rms_mean_noise:
             if row < len(rms_speech)-3:
-                if rms_speech[row+1] and rms_speech[row+2] and rms_speech[row+3] > rms_mean_noise:
+                if rms_speech[row+1] and rms_speech[row+2] > rms_mean_noise:
+                    if row > 0:
+                        row-=1
                     return row
     else:
         print("No speech detected")

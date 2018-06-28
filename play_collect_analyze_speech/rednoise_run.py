@@ -36,6 +36,11 @@ def wave2pitchmeansqrt(wavefile, target, noise):
         date = get_date()
         savewave('rednoise_speechstart_{}.wav'.format(date),voicestart_samp,sr)
         print('Removed silence from beginning of recording. File saved.')
+        
+    else:
+        #handle no speech in recording, or too much background noise
+        pass
+        
     
     rednoise_samp = stft2wave(y_stftred,len(y))
     date = get_date()
