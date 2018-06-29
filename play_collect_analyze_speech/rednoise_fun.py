@@ -113,7 +113,7 @@ def matchvol(target_powerspec, speech_powerspec, speech_stft):
 
 
 def is_speech(sp_mean_power, n_mean_power):
-    if sum(sp_mean_power) <= sum(n_mean_power):
+    if sum(sp_mean_power)/len(sp_mean_power) <= sum(n_mean_power)/len(n_mean_power):
         return False
     return True
 
