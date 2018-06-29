@@ -13,7 +13,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     n_power = stft2power(n_stft)
     n_energy = get_energy(n_stft)
     n_energy_mean = get_energy_mean(n_energy)
-    
+
     t_stft, ty, tsr = wave2stft(target)
     t_power = stft2power(t_stft)
     t_energy = get_energy(t_stft)
@@ -55,7 +55,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     print('Matched volume. File saved.')
     print('Now extracting pitch information')
     
-    #find start and end indices of sound to mimic:
+    #find start and end indices of sounds/speech:
     target_start = sound_index(t_energy,start=True,rms_mean_noise = None)
     target_end = sound_index(t_energy,start=False,rms_mean_noise = None)
     target_len = target_end - target_start
@@ -77,6 +77,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     yp_mean = get_pitch_mean(y_mimic_pitch)
     ypm_sqrt = pitch_sqrt(yp_mean)
 
+    
     n_pitch, n_m = get_pitch(noise)
     np_mean = get_pitch_mean(n_pitch)
     npm_sqrt = pitch_sqrt(np_mean)
@@ -85,7 +86,11 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     if np.max(tpm_sqrt) < np.max(ypm_sqrt):
         mag = np.max(tpm_sqrt)/np.max(ypm_sqrt)
         ypm_sqrt *= mag
-    return (ypm_sqrt, tpm_sqrt, npm_sqrt)
+    for index in range(len(npm_sqrt)):
+        if npm_sqrt[index] > 0.0:
+            start_index = index
+            break
+    return (ypm_sqrt, tpm_sqrt, npm_sqrt[start_index:])
     
     
 def compare_sim(pitch_mean1, pitch_mean2):
