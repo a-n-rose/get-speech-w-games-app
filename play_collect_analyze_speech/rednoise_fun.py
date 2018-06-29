@@ -74,6 +74,10 @@ def get_pitch(wavefile):
     pitches,mag = librosa.piptrack(y=y,sr=sr)
     return pitches,mag
 
+def get_pitch2(y,sr):
+    pitches,mag = librosa.piptrack(y=y,sr=sr)
+    return pitches,mag
+
 def get_pitch_mean(matrix_pitches):
     p = matrix_pitches.copy()
     p_mean = [np.mean(p[:,time_unit]) for time_unit in range(p.shape[1])]
