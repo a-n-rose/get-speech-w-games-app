@@ -7,25 +7,12 @@ Created on Tue May 15 22:22:15 2018
 """
 import numpy as np
 
-from rednoise_run import wave2pitchmeansqrt
+from rednoise_run import wave2pitchmeansqrt, compare_sim, get_score
 from voice_master import Mimic_Game
 import os
 
 #import shutil
   
-   
-def compare_sim(pitch_mean1, pitch_mean2):
-    pm1 = pitch_mean1.copy()
-    pm2 = pitch_mean2.copy()
-    if len(pm1) != len(pm2):
-        index_min = np.argmin([len(pm1),len(pm2)])
-        if index_min > 0:
-            pm1 = pm1[:len(pm2)]
-        else:
-            pm2 = pm2[:len(pm1)]
-    corrmatrix = np.corrcoef(pm1,pm2)
-    return(corrmatrix)
-   
 
 if __name__ == '__main__':
     currgame = Mimic_Game()
@@ -73,19 +60,14 @@ if __name__ == '__main__':
                     sp2noise = compare_sim(pitchsqrt_speech,pitchsqrt_noise)
                     sp2target = compare_sim(pitchsqrt_speech,pitchsqrt_target)
                     
-                    score_noise = sum(sum(sp2noise))
-                    score_target = sum(sum(sp2target))
-                    
-                    score = score_target/score_noise
+                    score = get_score(sp2target,sp2noise)
                 
-                    if score > 1.25:
-                        points = int(score**2) * 10
-                        print("Not bad! You earned {} points.".format(points))
-                        currgame.points += points
+                    if score > 0:
+                        print("Not bad! You earned {} points.".format(score))
+                        currgame.points += score
                     else:
                         print("You call that a mimic? No points earned. Try again!")
                         
-                    
                     print("Total points earned: {}".format(currgame.points))
                 else:
                     print("Thanks for playing!")
@@ -96,4 +78,3 @@ if __name__ == '__main__':
             currgame.cont_game = False
             currgame.close_game()
             #shutil.rmtree(directory_user)
-            
