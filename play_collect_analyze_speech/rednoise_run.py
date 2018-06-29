@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, voice_onset_index, get_energy, get_energy_mean
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, sound_index, get_energy, get_energy_mean
 
 
 def wave2pitchmeansqrt(wavefile, target, noise):
@@ -16,6 +16,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     
     t_stft, ty, tsr = wave2stft(target)
     t_power = stft2power(t_stft)
+    t_energy = get_energy(t_stft)
     
     npow_mean = get_mean_bandwidths(n_power)
     #npow_mean = get_rms(n_power)
@@ -24,7 +25,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     y_stftred = np.array([rednoise(npow_mean,npow_var,y_power[i],y_stft[i]) for i in range(y_stft.shape[0])])
 
     
-    voice_start = voice_onset_index(y_energy,n_energy_mean)
+    voice_start = sound_index(y_energy,start=True,rms_mean_noise = n_energy_mean)
     if voice_start:
         print(voice_start)
         print(voice_start/len(y_energy))
@@ -54,6 +55,15 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     print('Matched volume. File saved.')
     print('Now extracting pitch information')
     
+    #find start and end indices of sound to mimic:
+    target_start = sound_index(t_energy,start=True,rms_mean_noise = None)
+    target_end = sound_index(t_energy,start=False,rms_mean_noise = None)
+    target_len = target_end - target_start
+    
+    mimic_start = sound_index(y_energy,start=True,rms_mean_noise = n_energy_mean)    
+    mimic_end_match = mimic_start+target_len
+
+    
     y_pitch, y_m = get_pitch(wavefile)
     yp_mean = get_pitch_mean(y_pitch)
     ypm_sqrt = pitch_sqrt(yp_mean)
@@ -65,6 +75,10 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     t_pitch, t_m = get_pitch(target)
     tp_mean = get_pitch_mean(t_pitch)
     tpm_sqrt = pitch_sqrt(tp_mean)
+    
+    #get only relevant sections (i.e. when sound/voice is present):
+    
+    
     return (ypm_sqrt, tpm_sqrt, npm_sqrt)
     
     

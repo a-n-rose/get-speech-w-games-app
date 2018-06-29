@@ -38,7 +38,7 @@ if __name__ == '__main__':
     if not os.path.exists(directory_user):
         os.makedirs(directory_user)
     if username:
-        sec = 5
+        sec = 3
 #        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} seconds.\n\n".format(sec))
 
         print("\nThis next step will take just {} seconds\n".format(sec))
@@ -52,7 +52,7 @@ if __name__ == '__main__':
             while currgame.points < max_points:
                 currgame.cont_game = currgame.start_game('listen to a sound')
                 if currgame.cont_game:
-                    print("Right after this plays, we will record your attempt at the sound. Get ready!")
+                    print("After the sound plays, you will be signaled when to start your mimic. Ready?")
                     mim_filename = directory_mim+currgame.rand_sound2mimic()
                     duration = currgame.get_duration(mim_filename)
                     #max_amp = currgame.get_max_amp(mim_filename)
