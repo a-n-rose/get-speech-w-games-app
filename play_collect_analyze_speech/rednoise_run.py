@@ -51,7 +51,7 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     
     y_stftmatched = matchvol(t_power,y_power,y_stftred)
     matchvol_samp = stft2wave(y_stftmatched,len(y))
-    savewave('rednoise2_{}.wav'.format(date),rednoise_samp,sr)
+    savewave('rednoise2_{}.wav'.format(date),matchvol_samp,sr)
     print('Matched volume. File saved.')
     print('Now extracting pitch information')
     

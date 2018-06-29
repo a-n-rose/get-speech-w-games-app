@@ -57,7 +57,8 @@ if __name__ == '__main__':
                     duration = currgame.get_duration(mim_filename)
                     #max_amp = currgame.get_max_amp(mim_filename)
                     currgame.play_go()
-                    rep_mim = currgame.record_user(duration)
+                    #extend duration to allow for user delay
+                    rep_mim = currgame.record_user(duration+1)
 
                     #save the recording
                     time_str = currgame.get_date()
