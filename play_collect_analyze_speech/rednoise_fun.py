@@ -112,12 +112,6 @@ def matchvol(target_powerspec, speech_powerspec, speech_stft):
     return stft
 
 
-def is_speech(sp_mean_power, n_mean_power):
-    if sum(sp_mean_power)/len(sp_mean_power) <= sum(n_mean_power)/len(n_mean_power):
-        return False
-    return True
-
-
 def suspended_energy(rms_speech,row,rms_mean_noise,start):
     if start == True:
         if rms_speech[row+1] and rms_speech[row+2] > rms_mean_noise:
@@ -154,6 +148,8 @@ def sound_index(rms_speech, start = True, rms_mean_noise = None):
                         row -= 1
                         row -= 1
                         break
+                    if row<0:
+                        row=0
                     return row
     else:
         print("No speech detected.")
