@@ -38,7 +38,7 @@ if __name__ == '__main__':
     if not os.path.exists(directory_user):
         os.makedirs(directory_user)
     if username:
-        sec = 3
+        sec = 5
 #        print("\n\nDuring the next step, we need you stay as quiet as you can - we need to measure the background noise for {} seconds.\n\n".format(sec))
 
         print("\nThis next step will take just {} seconds\n".format(sec))
