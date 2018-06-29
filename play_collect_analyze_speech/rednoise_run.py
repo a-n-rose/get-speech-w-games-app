@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch,get_pitch2, get_pitch_mean, load_wave, pitch_sqrt, sound_index, get_energy, get_energy_mean
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch,get_pitch2, get_pitch_mean, pitch_sqrt, sound_index, get_energy, get_energy_mean
 
 
 def wave2pitchmeansqrt(wavefile, target, noise):
@@ -88,5 +88,22 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     return (ypm_sqrt, tpm_sqrt, npm_sqrt)
     
     
-    
-    
+def compare_sim(pitch_mean1, pitch_mean2):
+    pm1 = pitch_mean1.copy()
+    pm2 = pitch_mean2.copy()
+    if len(pm1) != len(pm2):
+        index_min = np.argmin([len(pm1),len(pm2)])
+        if index_min > 0:
+            pm1 = pm1[:len(pm2)]
+        else:
+            pm2 = pm2[:len(pm1)]
+    corrmatrix = np.corrcoef(pm1,pm2)
+    return(corrmatrix)
+
+
+def get_score(mimic_sound,mimic_noise):
+    mimic_sound = mimic_sound[0][1]
+    mimic_noise = mimic_noise[0][1]
+    score = mimic_sound - mimic_noise
+    score = int(score*100)
+    return score
