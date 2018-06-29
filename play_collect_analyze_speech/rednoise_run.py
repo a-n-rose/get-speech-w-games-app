@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch, get_pitch_mean, load_wave, pitch_sqrt, sound_index, get_energy, get_energy_mean
+from rednoise_fun import rednoise, wave2stft, stft2power, get_mean_bandwidths, get_var_bandwidths, stft2wave, savewave, get_date, matchvol, get_pitch,get_pitch2, get_pitch_mean, load_wave, pitch_sqrt, sound_index, get_energy, get_energy_mean
 
 
 def wave2pitchmeansqrt(wavefile, target, noise):
@@ -62,24 +62,31 @@ def wave2pitchmeansqrt(wavefile, target, noise):
     
     mimic_start = sound_index(y_energy,start=True,rms_mean_noise = n_energy_mean)    
     mimic_end_match = mimic_start+target_len
-
     
-    y_pitch, y_m = get_pitch(wavefile)
-    yp_mean = get_pitch_mean(y_pitch)
+    t_stft_sound = t_stft[target_start:target_end]
+    t_sound = stft2wave(t_stft_sound,len(ty))
+    t_sound_pitch,t_m = get_pitch2(t_sound,tsr)
+    tp_mean = get_pitch_mean(t_sound_pitch)
+    tpm_sqrt = pitch_sqrt(tp_mean)
+    
+    y_stft_mimic = y_stftmatched[mimic_start:mimic_end_match]
+    y_mimic = stft2wave(y_stft_mimic,len(y))
+    #have to normalize y_mimic - problem dealt
+    #with in the comparison of the sqrt_mean of pitch curves
+    y_mimic_pitch,y_m = get_pitch2(y_mimic,sr)
+    yp_mean = get_pitch_mean(y_mimic_pitch)
     ypm_sqrt = pitch_sqrt(yp_mean)
-    
+
     n_pitch, n_m = get_pitch(noise)
     np_mean = get_pitch_mean(n_pitch)
     npm_sqrt = pitch_sqrt(np_mean)
     
-    t_pitch, t_m = get_pitch(target)
-    tp_mean = get_pitch_mean(t_pitch)
-    tpm_sqrt = pitch_sqrt(tp_mean)
-    
-    #get only relevant sections (i.e. when sound/voice is present):
-    
-    
+    #to get them on the same scale
+    if np.max(tpm_sqrt) < np.max(ypm_sqrt):
+        mag = np.max(tpm_sqrt)/np.max(ypm_sqrt)
+        ypm_sqrt *= mag
     return (ypm_sqrt, tpm_sqrt, npm_sqrt)
+    
     
     
     
