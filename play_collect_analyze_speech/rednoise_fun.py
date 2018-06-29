@@ -87,9 +87,11 @@ def get_mean_bandwidths(matrix_bandwidths):
     return bw_mean
 
 def get_var_bandwidths(matrix_bandwidths):
-    bw = matrix_bandwidths.copy()
-    bw_var = [np.var(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
-    return bw_var
+    if len(matrix_bandwidths) > 0:
+        bw = matrix_bandwidths.copy()
+        bw_var = [np.var(bw[:,bandwidth]) for bandwidth in range(bw.shape[1])]
+        return bw_var
+    return None
 
 def rednoise(noise_powerspec_mean,noise_powerspec_variance, speech_powerspec_row,speech_stft_row):
     npm = noise_powerspec_mean
@@ -126,34 +128,36 @@ def sound_index(rms_speech, start = True, rms_mean_noise = None):
         rms_mean_noise = 1
     if start == True:
         side = 1
-        start = 0
+        beg = 0
         end = len(rms_speech)
     else:
         side = -1
-        start = len(rms_speech)-1
+        beg = len(rms_speech)-1
         end = -1
-    for row in range(start,end,side):
+    for row in range(beg,end,side):
         if rms_speech[row] > rms_mean_noise:
-            if suspended_energy(rms_speech,row,rms_mean_noise,start):
-                if start:
+            if suspended_energy(rms_speech,row,rms_mean_noise,start=start):
+                if start==True:
                     #to catch plosive sounds
                     while row >= 0:
-                        row += 1
-                        row += 1
+                        row -= 1
+                        row -= 1
+                        if row < 0:
+                            row = 0
                         break
-                    return row
+                    return row,True
                 else:
                     #to catch quiet cronsonant endings
                     while row <= len(rms_speech):
-                        row -= 1
-                        row -= 1
+                        row += 1
+                        row += 1
+                        if row > len(rms_speech):
+                            row = len(rms_speech)
                         break
-                    if row<0:
-                        row=0
-                    return row
+                    return row,True
     else:
         print("No speech detected.")
-    return None
+    return beg,False
 
         
 def savewave(filename,samples,sr):
